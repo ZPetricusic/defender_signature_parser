@@ -1,3 +1,9 @@
+# VDM files
+*.vdm*
+
+# testing samples
+sigs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
