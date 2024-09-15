@@ -26,7 +26,7 @@ options:
 
 ```
 
-##### Example 1 - create a hexdump of mpasbase.vdm signatures (slow!)
+### Example 1 - create a hexdump of mpasbase.vdm signatures (slow!)
 
 This output is generally good enough for searching through the database, while maintaining readability.
 
@@ -48,7 +48,7 @@ SIGNATURE_TYPE_FILEPATH(0x5f)
 00000030: 76 69 74 79 20 6D 6F 6E  69 74 6F 72 2E 6C 6E 6B  vity monitor.lnk
 ```
 
-##### Example 2 - print signatures from mpavbase.vdm as Python strings
+### Example 2 - print signatures from mpavbase.vdm as Python strings
 
 This output can contain `\x`-prefixed characters, but it can be suitable for searching through the signatures using tools like `grep`.
 
@@ -63,7 +63,7 @@ SIGNATURE_TYPE_FILEPATH(0x5f)
 \x1a\x00\\microsoft\\internet explorer\\quick launch\\activity monitor.lnk
 ```
 
-##### Example 3 - print signatures from mpasbase.vdm as hex strings
+### Example 3 - print signatures from mpasbase.vdm as hex strings
 
 This output can be useful for automation scripts, e.g. when parsing Lua rules.
 
@@ -78,7 +78,7 @@ SIGNATURE_TYPE_FILEPATH(0x5f)
 1a005c6d6963726f736f66745c696e7465726e6574206578706c6f7265725c717569636b206c61756e63685c6163746976697479206d6f6e69746f722e6c6e6b
 ```
 
-##### Example 4 - store the extracted VDM file to the current directory for future use
+### Example 4 - store the extracted VDM file to the current directory for future use
 
 ```
 python parser.py -v -e -o mpasbase_parsed.out /path/to/mpasbase.vdm
@@ -90,7 +90,7 @@ python parser.py -v -e -o mpasbase_parsed.out /path/to/mpasbase.vdm
 [*] VDM file extracted to mpasbase.vdm.extracted
 ```
 
-##### Example 5 - load the extracted VDM file instead of the original VDM
+### Example 5 - load the extracted VDM file instead of the original VDM
 
 This feature is implemented somewhat naively - by checking the file header. A typical VDM file is a PE file (MZ) header, whereas extracted VDMs are just binary data extracted from the PE resources and decompressed (no file header).
 
