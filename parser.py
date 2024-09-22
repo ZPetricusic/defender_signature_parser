@@ -5,7 +5,7 @@ import binascii
 import zlib
 import struct
 from enum import Enum, auto
-from hexdump import hexdump
+# from hexdump import hexdump
 
 SIG_TYPES = {
     1: "SIGNATURE_TYPE_RESERVED",
@@ -178,6 +178,36 @@ class ScriptError(Enum):
     ERR_EXTRACT_VDM_FAILED = auto()
 
 
+def print_if_printable(byte: bytes) -> str:
+    c = chr(byte)
+    return c if c.isprintable() else '.'
+
+
+def hexdump(bstr: bytes) -> str:
+    chunk_size = 16
+    # 8 bytes = 16 digits, 7 spaces in between
+    # chars_to_left_justify = chunk_size + (chunk_size // 2) - 1
+    chars_to_left_justify = 16 + 7
+    hexdumps = []
+
+    for chunk in range(0, len(bstr), chunk_size):
+        bin_data_left = bstr[chunk: chunk + chunk_size // 2]
+        bin_data_right = bstr[chunk + chunk_size // 2: chunk + chunk_size]
+
+        hex_string_left = binascii.hexlify(bin_data_left, sep=' ').decode(
+            'utf-8').ljust(chars_to_left_justify, ' ').upper()
+        hex_string_right = binascii.hexlify(bin_data_right, sep=' ').decode(
+            'utf-8').ljust(chars_to_left_justify, ' ').upper()
+
+        printable_string = ''.join(
+            map(print_if_printable, bstr[chunk: chunk + chunk_size]))
+
+        hexdumps.append(
+            f"{chunk:08X}: {hex_string_left}  {hex_string_right}  {printable_string}")
+
+    return '\n'.join(hexdumps)
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         prog="parser.py",
@@ -206,17 +236,17 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def perror(err):
+def perror(err: str) -> None:
     print(f"[!] {err}", file=sys.stderr)
 
 
-def vprint(s):
+def vprint(s: str) -> None:
     global VERBOSE
     if VERBOSE:
         print(f"[*] {s}")
 
 
-def verify_filepath(filepath, create_if_not_exists=False):
+def verify_filepath(filepath: str, create_if_not_exists: bool = False) -> None:
     if not os.path.exists(filepath):
         if create_if_not_exists:
             try:
@@ -233,7 +263,7 @@ def verify_filepath(filepath, create_if_not_exists=False):
             sys.exit(ScriptError.ERR_FILE_NOT_EXISTS)
 
 
-def ensure_file_is_pe(infile):
+def ensure_file_is_pe(infile) -> bool:
     # verify we're at the start
     infile.seek(0)
     mz_header = infile.read(2)
@@ -247,7 +277,7 @@ def ensure_file_is_pe(infile):
 
 
 # original code: https://github.com/commial/experiments/tree/master/windows-defender/VDM#decompressing
-def decompress_vdm(file_ptr, filename,  extract_to_disk):
+def decompress_vdm(file_ptr, filename: str,  extract_to_disk: bool) -> bytes:
     data = file_ptr.read()
     # Look for the resource signature
     base = data.index(b"RMDX")
@@ -274,7 +304,7 @@ def decompress_vdm(file_ptr, filename,  extract_to_disk):
 # https://gist.github.com/vladignatyev/06860ec2040cb497f0f3
 
 
-def progress(count, total, status=''):
+def progress(count: int, total: int, status: str = '') -> None:
     bar_len = 60
     filled_len = int(round(bar_len * count / float(total)))
 
@@ -368,7 +398,7 @@ def main():
                 # remove the b'' wrapper
                 outfile.write(f"{str(signature)[2:-1]}\n\n")
             else:  # default
-                outfile.write(f"{hexdump(signature, result='return')}\n\n")
+                outfile.write(f"{hexdump(signature)}\n\n")
 
             sig_count += 1
 
