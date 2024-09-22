@@ -1,6 +1,8 @@
 # defender_signature_parser
 Short Python script used for parsing Defender VDM signature files. Most of the research was performed by [commial](https://github.com/commial/experiments/tree/master/windows-defender/VDM) - all credits to the original authors.
 
+The script was written in pure Python 3 and does not require additional modules, hence the lack of `requirements.txt`.
+
 ## Usage
 
 ```
