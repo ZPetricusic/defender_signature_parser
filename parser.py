@@ -5,7 +5,6 @@ import binascii
 import zlib
 import struct
 from enum import Enum, auto
-# from hexdump import hexdump
 
 SIG_TYPES = {
     1: "SIGNATURE_TYPE_RESERVED",
